@@ -1,0 +1,57 @@
+.stages {
+	z-index: 0;
+	height: 30%;
+	width: 100%;
+}
+
+#border-one {
+	height: 5%;
+	width: 100%;
+	
+	display: flex;
+	justify-content: space-between;
+}
+
+#border-one-left {
+	height: 100%;
+	width: 40%;
+	background-color: black;
+}
+
+#border-one-right {
+	width: 40%;
+	height: 100%;
+	background-color: black;
+}
+
+#border-two {
+	height: 5%;
+	width: 100%;
+	
+	display: flex;
+	justify-content: space-between
+}
+
+
+#border-two-left {
+	height: 100%;
+	width: 70%;
+	background-color: black;
+}
+
+#border-two-right {
+	width: 10%;
+	height: 100%;
+	background-color: black;
+}
+
+#object {
+	z-index: 1;
+	position: relative;
+	width: 200px;
+	height: 200px;
+	
+	left: 100px; bottom: 1000		px;
+	background-image: url(../Bilder/22b22848ea88550.png);
+	background-size: cover;
+}
