@@ -72,3 +72,8 @@
 	border-radius: 100%;
 	background-color: black;
 }
+
+#testObject {
+	left: 1700px;
+	top: 400px;
+}
