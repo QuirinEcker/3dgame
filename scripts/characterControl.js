@@ -162,8 +162,7 @@ function fallDown(object, amountToFall) {
 }
 
 function isOverHole() {
-	return (characterCoordinates.y == stages[0].verticalPosition &&
-		stages[0].holeStart <= characterCoordinates.x && characterCoordinates.x <= stages[0].holeEnd) ||
-		(characterCoordinates.y == stages[1].verticalPosition &&
-		stages[1].holeStart <= characterCoordinates.x && characterCoordinates.x <= stages[1].holeEnd)
+	let currentStage = getStage();
+	return (stages[currentStage].holeStart <= characterCoordinates.x &&
+		   characterCoordinates.x + 100 <= stages[currentStage].holeEnd);
 }
