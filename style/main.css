@@ -21,3 +21,19 @@ body {
 	border: 10px solid black;
 }
 
+#counter {
+	background-color: black;
+	color: white;
+	font-size: 50px;
+	width: 200px;
+	height: 100px;
+	
+	position: fixed;
+	top: 0;
+	left: 0;
+	
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+

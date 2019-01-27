@@ -33,6 +33,7 @@ function getHole(borderNumber, verticalPosition) {
 }
 
 window.addEventListener("load", () => {
+	refreshGoal();
 	var holeOfStage1 = getHole("border-one", stageCoordinates.stageOne);
 	stages.push(holeOfStage1);
 	console.log("Stage1: " + stages[0].holeStart + " : " + stages[0].holeEnd)
@@ -101,8 +102,19 @@ function ckeckGoals() {
 				console.log("hit , " + goal);
 				goal.style.display = "none"
 				points++;
+				refreshGoal()
 			}
 		}
+	}
+}
+
+function refreshGoal() {
+	let counter = document.getElementById("counter");
+	
+	if(points == 3) {
+		counter.textContent = "Victory"
+	} else {
+		counter.textContent = points;
 	}
 }
 	
