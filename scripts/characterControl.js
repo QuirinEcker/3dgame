@@ -18,6 +18,8 @@ let stageGoalCoordinates = {
 
 let stages = [];
 
+let isJumping = false;
+
 function getHole(borderNumber, verticalPosition) {
 	const borderOne = document.getElementById(borderNumber);
 	const borderOneLeft = document.getElementById(borderNumber + "-left");
@@ -47,7 +49,7 @@ window.addEventListener('keydown', (e) => {
 		moveRight(20, characterObject);
 	} else if (e.key === 'a') {
 		moveLeft(20, characterObject);
-	} else if(e.keyCode === 32 || e.key === 'w') {
+	} else if(!isJumping && (e.keyCode === 32 || e.key === 'w')) {
 		jump(characterObject, getAmountToJump());
 	}
 	borderStop();
@@ -131,6 +133,7 @@ function jump(object, amountToJump) {
 	let newEndPosition = characterCoordinates.y - amountToJump;
 	const time = 1;
 	console.log("Jump " + amountToJump);
+	isJumping = true;
 	interval = setInterval(() => moveVertical(object, -1, newEndPosition), time);
 }
 
@@ -139,6 +142,7 @@ function moveVertical(object, direction, endPosition) {
 	object.style.top = characterCoordinates.y + "px";
 	if (characterCoordinates.y == endPosition) {
 		clearInterval(interval);
+		isJumping = false;
 		console.log("New pos: (" + characterCoordinates.x + ", " + characterCoordinates.y + ")");
 	}
 }
