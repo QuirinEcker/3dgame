@@ -10,6 +10,12 @@ let stageCoordinates = {
 	stageThree: 900
 }
 
+let stageGoalCoordinates = {
+	stageOne: 50,
+	stageTwo: 400,
+	stageThree: 750
+}
+
 let stages = [];
 
 function getHole(borderNumber, verticalPosition) {
@@ -84,18 +90,40 @@ function borderStop() {
 }
 
 function ckeckGoals() {
-	let objects = document.getElementsByClassName("object");
-
-	for(let objectID = 0; objectID < objects.length; objectID++) {
-		let object = objects[objectID]
-		//alert(parseInt(object.style.left)) 
-		if(parseInt(object.style.top) === 400) {
-			if(characterCoordinates.x === parseInt(object.style.left) + (object.clientWidth/4)) {
-				object.style.display = "none"
+	let goals = document.getElementsByClassName("object");
+	for (let goal of goals) {
+		//console.log(getGoalStage(goal));
+		if (getStage() === getGoalStage(goal)) {
+			console.log("checkGoal" + goal.style.left)
+			if (characterCollidesWith(goal)) {
+				console.log("hit , " + goal);
+				goal.style.display = "none"
 				points++;
 			}
 		}
 	}
+}
+	
+function getGoalStage(goal) {
+	switch (parseInt(goal.style.top)) {
+		case stageGoalCoordinates.stageOne:
+			return 0;
+			break;
+		case stageGoalCoordinates.stageTwo:
+			return 1;
+			break;
+		default:
+			return 2;
+			break;
+	}
+}
+
+function characterCollidesWith(goal) {
+	centerOfCharacter = characterCoordinates.x + document.getElementById("character").clientWidth/2;
+	goalLeft = parseInt(goal.style.left);
+	goalRight = parseInt(goal.style.left) + goal.clientWidth;
+	
+	return (goalLeft <= centerOfCharacter && centerOfCharacter <= goalRight);
 }
 
 let interval = 0;
