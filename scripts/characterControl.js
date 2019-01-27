@@ -163,6 +163,7 @@ function fallDown(object, amountToFall) {
 
 function isOverHole() {
 	let currentStage = getStage();
+	let characterWidth = document.getElementById("character").clientWidth;
 	return (stages[currentStage].holeStart <= characterCoordinates.x &&
 		   characterCoordinates.x + 100 <= stages[currentStage].holeEnd);
 }
