@@ -4,34 +4,65 @@ let characterCoordinates = {
 	y: 540
 }
 
+let stageCoordinates = {
+	stageOne: 100,
+	stageTwo: 540,
+	stageThree: 900
+}
+
+let stages = [];
+
+function getHole(borderNumber, verticalPosition) {
+	const borderOne = document.getElementById(borderNumber);
+	const borderOneLeft = document.getElementById(borderNumber + "-left");
+	const borderOneRight = document.getElementById(borderNumber + "-right");
+	
+	return {
+		verticalPosition: verticalPosition,
+		holeStart: borderOneLeft.clientWidth,
+		holeEnd: borderOne.clientWidth - borderOneRight.clientWidth
+	}
+}
+
+window.addEventListener("load", () => {
+	var holeOfStage1 = getHole("border-one", stageCoordinates.stageOne);
+	stages.push(holeOfStage1);
+	console.log("Stage1: " + stages[0].holeStart + " : " + stages[0].holeEnd)
+	var holeOfStage2 = getHole("border-two", stageCoordinates.stageTwo);
+	stages.push(holeOfStage2);
+	console.log("Stage2: " + stages[1].holeStart + " : " + stages[1].holeEnd)
+	stages.push({verticalPosition: stageCoordinates.stageThree, holeStart: -1, holeEnd: -1});
+});
+
 window.addEventListener('keydown', (e) => {
 	let characterObject = document.getElementById("character");
 	
 	if (e.key === 'd') {
-		moveLeft(20, characterObject);
-	} else if (e.key === 'a') {
 		moveRight(20, characterObject);
+	} else if (e.key === 'a') {
+		moveLeft(20, characterObject);
 	} else if(e.keyCode === 32 || e.key === 'w') {
-		jump(400, characterObject);
+		jump(characterObject, getAmountToJump());
 	}
+	borderStop();
+	ckeckGoals();
+	checkGround(characterObject);
 });
 
 function moveLeft(amount, object) {
+	moveHorizontal(amount, -1, object);
+}
+
+function moveHorizontal(amount, direction, object) {
 	for(let i = 0; i < amount; i++) {
-		characterCoordinates.x = characterCoordinates.x + 1;
+		characterCoordinates.x = characterCoordinates.x + direction;
 		object.style.left = characterCoordinates.x + "px";
-		borderStop();
-		ckeckGoals();
 	}
+	console.log("New ps: (" + characterCoordinates.x + ", " + characterCoordinates.y + ")");
 }
 
 function moveRight(amount, object) {
-	for(let i = 0; i < amount; i++) {
-		characterCoordinates.x = characterCoordinates.x - 1;
-		object.style.left = characterCoordinates.x + "px";
-		borderStop();
-		ckeckGoals();
-	}
+	moveHorizontal(amount, 1, object);
 }
 
 function borderStop() {
@@ -67,15 +98,72 @@ function ckeckGoals() {
 	}
 }
 
-function jump(amount, object) {
-	let time = 10;
-	
-	setTimeout(amount*time, () => {
+let interval = 0;
+function jump(object, amountToJump) {
+	let newEndPosition = characterCoordinates.y - amountToJump;
+	const time = 1;
+	console.log("Jump " + amountToJump);
+	interval = setInterval(() => moveVertical(object, -1, newEndPosition), time);
+}
+
+function moveVertical(object, direction, endPosition) {
+	characterCoordinates.y = characterCoordinates.y + direction;
+	object.style.top = characterCoordinates.y + "px";
+	if (characterCoordinates.y == endPosition) {
 		clearInterval(interval);
-	});
-	
-	let interval = setInterval(() => {
-		characterCoordinates.y = characterCoordinates.y - 1;
-		object.style.top = characterCoordinates.y + "px";
-	}, time);
+		console.log("New pos: (" + characterCoordinates.x + ", " + characterCoordinates.y + ")");
+	}
+}
+
+function getStage() {
+	switch (characterCoordinates.y) {
+		case stageCoordinates.stageOne:
+			return 0;
+			break;
+		case stageCoordinates.stageTwo:
+			return 1;
+			break;
+		default:
+			return 2;
+			break;
+	}
+}
+
+function getAmountToJump() {
+	const currentStage = getStage(characterCoordinates.y);
+	if (currentStage > 0) {
+		return stages[currentStage].verticalPosition - stages[currentStage - 1].verticalPosition;
+	} else {
+		return 400;
+	}
+}
+
+function checkGround(characterObject) {
+	if (isOverHole()) {
+		console.log("Fall down " + getAmountToFall());
+		fallDown(characterObject, getAmountToFall())
+	}
+}
+
+function getAmountToFall() {
+	const currentStage = getStage(characterCoordinates.y);
+	if (currentStage < 2) {
+		return stages[currentStage + 1].verticalPosition - stages[currentStage].verticalPosition;
+	} else {
+		return 400;
+	}
+}
+
+function fallDown(object, amountToFall) {
+	let newEndPosition = characterCoordinates.y + amountToFall;
+	const time = 1;
+	console.log("Fall " + amountToFall);
+	interval = setInterval(() => moveVertical(object, 1, newEndPosition), time);
+}
+
+function isOverHole() {
+	return (characterCoordinates.y == stages[0].verticalPosition &&
+		stages[0].holeStart <= characterCoordinates.x && characterCoordinates.x <= stages[0].holeEnd) ||
+		(characterCoordinates.y == stages[1].verticalPosition &&
+		stages[1].holeStart <= characterCoordinates.x && characterCoordinates.x <= stages[1].holeEnd)
 }
