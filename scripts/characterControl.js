@@ -16,6 +16,15 @@ let stageGoalCoordinates = {
 	stageThree: 750
 }
 
+let sprite = [
+	"Bilder/spriteFragments/sprite1.png",
+	"Bilder/spriteFragments/sprite2.png",
+	"Bilder/spriteFragments/sprite3.png",
+	"Bilder/spriteFragments/sprite4.png",
+	"Bilder/spriteFragments/sprite5.png",
+	"Bilder/spriteFragments/sprite6.png"
+]
+
 let stages = [];
 
 let isJumping = false;
@@ -33,6 +42,7 @@ function getHole(borderNumber, verticalPosition) {
 }
 
 window.addEventListener("load", () => {
+	document.getElementById("character").src = sprite[0];
 	refreshGoal();
 	var holeOfStage1 = getHole("border-one", stageCoordinates.stageOne);
 	stages.push(holeOfStage1);
@@ -62,12 +72,16 @@ function moveLeft(amount, object) {
 	moveHorizontal(amount, -1, object);
 }
 
+let currentSprite = 0;
 function moveHorizontal(amount, direction, object) {
 	for(let i = 0; i < amount; i++) {
 		characterCoordinates.x = characterCoordinates.x + direction;
 		object.style.left = characterCoordinates.x + "px";
+		console.log(sprite[i])
 	}
 	console.log("New ps: (" + characterCoordinates.x + ", " + characterCoordinates.y + ")");
+	object.src = sprite[currentSprite%sprite.length];
+	currentSprite++;
 }
 
 function moveRight(amount, object) {
